@@ -1,0 +1,40 @@
+POST /webapi/demo/ HTTP/1.1
+Host: 127.0.0.1:7031
+Content-Type: application/json;charset=utf-8
+
+{
+    "name":"First Demo",
+    "description":"这是第一个测试"
+}
+
+###
+GET /webapi/demo/ HTTP/1.1
+Host: 127.0.0.1:7031
+Content-Type: application/json;charset=utf-8
+
+###
+GET /webapi/demo/100001 HTTP/1.1
+Host: 127.0.0.1:7031
+Content-Type: application/json;charset=utf-8
+
+###
+GET /webapi/demo/ HTTP/1.1
+Host: 127.0.0.1:7031
+
+###
+PUT /webapi/demo/100031 HTTP/1.1
+Host: 127.0.0.1:7031
+Content-Type: application/json;charset=utf-8
+
+{
+    "name":"Second Demo",
+    "description":"这是第二个测试"
+}
+
+###
+DELETE /webapi/demo/100031 HTTP/1.1
+Host: 127.0.0.1:7031
+
+###
+DELETE /webapi/demo/?ids=100030&ids=100029&ids=100028 HTTP/1.1
+Host: 127.0.0.1:7031
