@@ -48,11 +48,12 @@ spring:
       
 ---
 #--------------jackson-----------------
-spring:
-  jackson:
-    default-property-inclusion: NON_NULL
+# @see JacksonConfig
+# spring:
+  # jackson:
+    # default-property-inclusion: NON_NULL
 #spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
+    # time-zone: GMT+8
     
     # serialization:
     #   WRITE_DATES_AS_TIMESTAMPS: true

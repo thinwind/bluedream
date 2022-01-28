@@ -51,6 +51,19 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class JacksonConfig {
     
+    public static final String LOCAL_TIME_ZONE = "GMT+8";
+    
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    
+    public static final ZoneId GMT8;
+    
+    public static final DateTimeFormatter FORMATTER;
+    
+    static{
+        GMT8 = ZoneId.of(LOCAL_TIME_ZONE);
+        FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(GMT8);
+    }
+    
     @Bean
     @Primary
     public ObjectMapper jacksonObjectMapper()
@@ -68,19 +81,18 @@ public class JacksonConfig {
         builder.configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS, true);
         //确定解析器是否允许使用单引号(撇号，字符'\ ")引用字符串(名称和字符串值)的特性。如果是，这是除了其他可接受的标记。但不是JSON规范)。
         builder.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        ZoneId gmt8 = ZoneId.of("GMT+8");
-        builder.defaultTimeZone(TimeZone.getTimeZone(gmt8));
         
+        //处理 时间格式
+        builder.defaultTimeZone(TimeZone.getTimeZone(GMT8));
         JsonMapper jsonMapper = builder.build();
         JavaTimeModule javaTimeModule = new JavaTimeModule();
-        //处理 时间格式
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(gmt8);
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(formatter));
+
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(FORMATTER));
         javaTimeModule.addSerializer(Date.class, new JsonSerializer<Date>() {
             @Override
             public void serialize(Date value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
                 Instant instant= Instant.ofEpochMilli(value.getTime());
-                gen.writeString(formatter.format(instant));
+                gen.writeString(FORMATTER.format(instant));
             }
         });
         //注册
